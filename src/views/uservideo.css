@@ -1,0 +1,14 @@
+.cell {
+    height: 100%;
+    padding-top: 10px;
+}
+
+.video {
+    height: 80%;
+    /* width: 100%; */
+    background-color: white;
+}
+
+.first {
+    background-color: red;
+}

@@ -1,0 +1,46 @@
+.navbar {
+    height: 90px;
+    background-image: url("../assets/image/background.png");
+    background-size: cover;
+}
+
+#sun-logo {
+    width: 50px;
+}
+
+#sun-logo-title {
+    align-items: center;
+    font-size: 2rem;
+    position: relative;
+    top: 7px;
+    left: 15px;
+}
+
+#alive-mafia-num {
+    font-size: 2rem;
+    position: relative;
+    top: 7px;
+    left: 15px;
+}
+
+#start-button {
+    position: absolute;
+    width: 244px;
+    height: 80%;
+    left: 45%;
+    text-align: center;
+    margin: 0 auto;
+}
+
+#timer {
+    font-size: 2.5rem;
+    top: 22px;
+    position: absolute;
+    right: 80px;
+}
+
+#rule-book {
+    top: 35px;
+    position: absolute;
+    right: 20px;
+}

@@ -1,30 +1,34 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view />
+    <div class="app">
+        <nav-header></nav-header>
+        <div class="progress">
+            <div
+                class="progress-bar"
+                role="progressbar"
+                style="width: 50%"
+                aria-valuenow="100"
+                aria-valuemin="0"
+                aria-valuemax="100"
+            ></div>
+        </div>
+        <Section></Section>
+    </div>
 </template>
 
+<script>
+import "./assets/common.css";
+import NavHeader from "./views/NavHeader";
+import Section from "./views/Section";
+export default {
+    name: "App",
+    components: {
+        NavHeader,
+        Section,
+    },
+};
+</script>
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+.app {
+    height: 100%;
 }
 </style>
