@@ -1,33 +1,39 @@
 <template>
     <div class="section container-fluid">
         <!--정보박스-->
-        <div id="info-box"></div>
+        <div id="info-box" class="font-jua">
+            <span class="info-text">최소 4명부터 게임을 시작할 수 있습니다.</span>
+        </div>
 
         <div class="card-box-parent">
             <!--첫번째 줄-->
-            <div class="card-box row first-row-box gx-5 d-flex" :class="getJustifyClassFirstRow">
-                <user-video :playerName="subscribeName2" id="video-2"></user-video>
-                <user-video :playerName="subscribeName3" id="video-3"></user-video>
-                <user-video :playerName="subscribeName6" id="video-6"></user-video>
-                <user-video :playerName="subscribeName7" id="video-7"></user-video>
+            <div class="card-box row gx-5 d-flex" :class="getJustifyClassFirstRow">
+                <user-video :playerName="subscribeName2" @setVoteData="setVoteData"></user-video>
+                <user-video :playerName="subscribeName3" @setVoteData="setVoteData"></user-video>
+                <user-video :playerName="subscribeName6" @setVoteData="setVoteData"></user-video>
+                <user-video :playerName="subscribeName7" @setVoteData="setVoteData"></user-video>
             </div>
 
             <!-- 두번째 줄 -->
-            <div class="card-box row second-row-box gx-5">
-                <user-video :playerName="subscribeName8" id="video-8"></user-video>
+            <div class="card-box row gx-5">
+                <user-video :playerName="subscribeName8" @setVoteData="setVoteData"></user-video>
                 <user-video
                     :playerName="subscribeName9"
-                    id="video-9"
+                    @setVoteData="setVoteData"
                     class="offset-md-6"
                 ></user-video>
             </div>
 
             <!-- 세번째 줄 -->
-            <div class="card-box row third-row-box gx-5 d-flex" :class="getJustifyClassThirdRow">
-                <user-video :playerName="subscribeName4" id="video-4"></user-video>
-                <user-video :playerName="this.publisher" id="video-mine"></user-video>
-                <user-video :playerName="subscribeName5" id="video-5"></user-video>
-                <user-video :playerName="subscribeName10" id="video-10"></user-video>
+            <div class="card-box row gx-5 d-flex" :class="getJustifyClassThirdRow">
+                <user-video :playerName="subscribeName4" @setVoteData="setVoteData"></user-video>
+                <user-video
+                    :playerName="this.publisher"
+                    id="video-mine"
+                    @setVoteData="setVoteData"
+                ></user-video>
+                <user-video :playerName="subscribeName5" @setVoteData="setVoteData"></user-video>
+                <user-video :playerName="subscribeName10" @setVoteData="setVoteData"></user-video>
             </div>
         </div>
     </div>
@@ -39,6 +45,30 @@ import "@/views/section.css";
 import UserVideo from "@/views/UserVideo";
 // import { onMounted, reactive } from "vue";
 
+class Player {
+    name = null;
+    color = null;
+    voters = [];
+    constructor(name, color) {
+        this.name = name;
+        this.color = color;
+    }
+}
+
+var colorCode = [
+    "#800080",
+    "#DFFF00",
+    "#FFBF00",
+    "#FF7F50",
+    "#DE3163",
+    "#9FE2BF",
+    "#40E0D0",
+    "#6495ED",
+    "#CCCCFF",
+    "#808080",
+    "#000000",
+];
+
 export default {
     name: "Section",
     components: {
@@ -46,7 +76,12 @@ export default {
     },
     data() {
         return {
-            subscribers: ["이현정", "유태규", "김용훈", "김지훈"],
+            subscribers: [
+                new Player("이현정", colorCode[1]),
+                new Player("유태규", colorCode[2]),
+                new Player("김용훈", colorCode[3]),
+                new Player("김지훈", colorCode[4]),
+            ],
             publisher: "String",
             playerNum: 1,
             subscribeName2: "",
@@ -80,10 +115,11 @@ export default {
             }
         },
     },
-    mounted() {
+    created() {
         console.log("mounted");
-        this.publisher = "최은송";
+        this.publisher = new Player("최은송", colorCode[0]);
 
+        //subscribers 초기화
         let i;
         for (i = 0; i < this.subscribers.length; i++) {
             this.playerNum += 1;
@@ -91,6 +127,12 @@ export default {
 
             this.passProps(i, true);
         }
+
+        //icon test
+        this.subscribers[0].voters.push({
+            playerId: "유태규",
+            color: colorCode[2],
+        });
     },
     methods: {
         leaveRoom() {
@@ -112,14 +154,14 @@ export default {
             this.playerNum -= 1;
         },
         enterRoom() {
-            this.subscribers.push("최최최");
-            let idx = this.subscribers.length - 1;
+            let idx = this.subscribers.length;
+            console.log("idx", idx);
+            this.subscribers.push(new Player("최최최", colorCode[idx + 1]));
             this.passProps(idx, true);
 
             this.playerNum += 1;
         },
         passProps(i, flag) {
-            console.log(this.subscribers);
             switch (i + 2) {
                 case 2:
                     this.subscribeName2 = flag ? this.subscribers[i] : "";
@@ -158,6 +200,37 @@ export default {
                     // console.log(10);
                     break;
             }
+        },
+        setVoteData(data) {
+            console.log(data);
+            // 투표한 playerId를 찾아서 그사람의 voted에 추가해줌
+
+            let idx = 0;
+            for (; idx < this.subscribers.length; idx++) {
+                if (this.subscribers[idx].name == data.playerId) {
+                    // 첫 투표라면 => 투표하기
+                    if (data.isFirstVote) {
+                        this.subscribers[idx].voters.push({
+                            playerId: this.publisher.name,
+                            color: this.publisher.color,
+                        });
+                        this.passProps(idx, true);
+                    } else {
+                        //두번째 클릭 => 투표취소
+
+                        let result = this.subscribers[idx].voters.findIndex(
+                            (voter) => voter.playerId == this.publisher.name
+                        );
+                        console.log(result);
+                        this.subscribers[idx].voters.splice(result, 1);
+                        console.log(this.subscribers);
+                        this.passProps(idx, true);
+                    }
+                    break;
+                }
+            }
+
+            console.log(this.subscribers);
         },
     },
 };
