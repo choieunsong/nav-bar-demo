@@ -1,7 +1,9 @@
 <template>
     <div v-if="playerName" class="cell-box col-md-3" @click="votePlayer">
         <div class="cell col-md-12" :style="'background-color: ' + this.playerName.color">
-            <div class="video"></div>
+            <div class="video">
+                <video></video>
+            </div>
             <span id="nickname" class="font-jua">
                 {{ this.playerName.name }}
             </span>
@@ -24,6 +26,7 @@ export default {
         return {
             hello: "hello",
             isFirstVote: false,
+            phase: "day",
         };
     },
     methods: {

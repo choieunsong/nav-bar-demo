@@ -83,7 +83,6 @@ export default {
                 new Player("김지훈", colorCode[4]),
             ],
             publisher: "String",
-            playerNum: 1,
             subscribeName2: "",
             subscribeName3: "",
             subscribeName4: "",

@@ -1,3 +1,14 @@
+.progress {
+    height: 20px;
+    background: #484949;
+    position: relative;
+    margin: auto;
+}
+
+.progress-bar {
+    background-image: linear-gradient(to right, #152fc0, #9c16a8);
+}
+
 .navbar {
     height: 90px;
     background-image: url("../assets/image/background.png");
